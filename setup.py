@@ -5,7 +5,7 @@ import tempfile
 import hashlib
 import tarfile
 
-from distutils.command.build_ext import build_ext
+from setuptools.command.build_ext import build_ext
 from setuptools import Extension
 from setuptools import setup
 
@@ -17,7 +17,7 @@ except ImportError:
 
 DWM_VERSION = '6.1'
 DWM_SRC_ROOT_DIR = 'dwm_src'
-DWM_SRC_DIR = os.path.join('dwm_src', 'dwm-{version}').format(
+DWM_SRC_DIR = os.path.join(DWM_SRC_ROOT_DIR, 'dwm-{version}').format(
     version=DWM_VERSION
 )
 DWM_SOURCE = (
@@ -121,7 +121,7 @@ setup(
     url='https://github.com/benwah/pydwm',
     author='Benoit C. Sirois',
     author_email='benoitcsirois@gmail.com',
-    version='0.1.1',
+    version='0.1.2',
     description='A simple python wrapper around DWM.',
     long_description=(
         'This is a very simple python wrapper around DWM. It downloads DWM, '
