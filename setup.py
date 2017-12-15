@@ -118,10 +118,10 @@ class BuildDwm(build_ext, object):
 
 setup(
     name='pydwm',
-    url='',
-    author='Benoit',
+    url='https://github.com/benwah/pydwm',
+    author='Benoit C. Sirois',
     author_email='benoitcsirois@gmail.com',
-    version='0.1',
+    version='0.1.1',
     description='A simple python wrapper around DWM.',
     long_description=(
         'This is a very simple python wrapper around DWM. It downloads DWM, '
