@@ -121,7 +121,7 @@ setup(
     url='https://github.com/benwah/pydwm',
     author='Benoit C. Sirois',
     author_email='benoitcsirois@gmail.com',
-    version='0.1.2',
+    version='0.1.3',
     description='A simple python wrapper around DWM.',
     long_description=(
         'This is a very simple python wrapper around DWM. It downloads DWM, '
@@ -148,7 +148,7 @@ setup(
     ext_modules=[dwm],
     entry_points={
         'console_scripts': [
-            'pydwn = pydwm:init_dwm',
+            'pydwm = pydwm:init_dwm',
         ]
     }
 )
