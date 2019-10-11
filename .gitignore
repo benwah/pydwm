@@ -61,3 +61,5 @@ ENV/
 env.bak/
 venv.bak/
 dist/
+
+dwm_src
