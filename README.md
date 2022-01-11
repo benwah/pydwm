@@ -17,3 +17,5 @@ To build this, you'll need the source code for some libraries DWM requires. On U
 ```bash
 sudo apt-get install build-essential libx11-dev libxft-dev libxinerama-dev
 ```
+
+## Install

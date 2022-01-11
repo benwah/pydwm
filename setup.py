@@ -20,7 +20,7 @@ def relative_path(*parts):
     return os.path.join('.', *parts)
 
 
-DWM_VERSION = '6.2'
+DWM_VERSION = '6.3'
 DWM_SRC_ROOT_DIR= relative_path('dwm_src')
 DWM_REMOTE_SOURCE = (
     'https://dl.suckless.org/dwm/dwm-{version}.tar.gz'.format(
@@ -33,14 +33,14 @@ DWM_MD5 = '9929845ccdec4d2cc191f16210dd7f3d'
 dwm = Extension(
     'dwm',
     define_macros=[
-        ('_DEFAULT_SOURCE',),
-        ('_BSD_SOURCE',),
+        ('_DEFAULT_SOURCE', True),
+        ('_BSD_SOURCE', True),
         ('_POSIX_C_SOURCE', 2),
         ('VERSION', '"{version}"'.format(version=DWM_VERSION)),
-        ('XINERAMA',),
+        ('XINERAMA', True),
     ],
     libraries=['X11', 'Xinerama', 'fontconfig', 'Xft'],
-    library_dirs=['/usr/X11R6/lib'],
+    library_dirs=['/usr/lib/x86_64-linux-gnu'],
     extra_compile_args=[
         '-c',
         '-fPIC',
@@ -53,7 +53,7 @@ dwm = Extension(
         '-fPIC',
     ],
     include_dirs=[
-        '/usr/X11R6/include',
+        '/usr/include/X11/',
         '/usr/include/freetype2',
         DWM_SRC_ROOT_DIR,
     ],

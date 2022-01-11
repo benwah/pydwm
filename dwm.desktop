@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=PyDwm
+Comment=Dynamic window manager
+Exec=/home/metrio/.pyenv/versions/3.10.1/bin/pydwm
+Type=XSession
