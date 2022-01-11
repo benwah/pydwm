@@ -16,8 +16,12 @@ except ImportError:
     from urllib2 import urlopen
 
 
+def relative_path(*parts):
+    return os.path.join('.', *parts)
+
+
 DWM_VERSION = '6.2'
-DWM_SRC_ROOT_DIR= os.path.join('dwm_src')
+DWM_SRC_ROOT_DIR= relative_path('dwm_src')
 DWM_REMOTE_SOURCE = (
     'https://dl.suckless.org/dwm/dwm-{version}.tar.gz'.format(
         version=DWM_VERSION
@@ -26,26 +30,15 @@ DWM_REMOTE_SOURCE = (
 DWM_MD5 = '9929845ccdec4d2cc191f16210dd7f3d'
 
 
-class DwmExtension(Extension):
-    def __init__(self, *args, **kwargs):
-        super(DwmExtension, self).__init__(*args, **kwargs)
-
-    def set_dwm_options(self, dwm_version):
-        self.define_macros=[
-            ('_DEFAULT_SOURCE',),
-            ('_BSD_SOURCE',),
-            ('_POSIX_C_SOURCE', 2),
-            ('VERSION', '"{version}"'.format(version=dwm_version)),
-            ('XINERAMA',),
-        ]
-
-
-def relative_path(*parts):
-    return os.path.join(os.path.dirname(__file__), *parts)
-
-
-dwm = DwmExtension(
+dwm = Extension(
     'dwm',
+    define_macros=[
+        ('_DEFAULT_SOURCE',),
+        ('_BSD_SOURCE',),
+        ('_POSIX_C_SOURCE', 2),
+        ('VERSION', '"{version}"'.format(version=DWM_VERSION)),
+        ('XINERAMA',),
+    ],
     libraries=['X11', 'Xinerama', 'fontconfig', 'Xft'],
     library_dirs=['/usr/X11R6/lib'],
     extra_compile_args=[
@@ -62,12 +55,12 @@ dwm = DwmExtension(
     include_dirs=[
         '/usr/X11R6/include',
         '/usr/include/freetype2',
-        relative_path(DWM_SRC_ROOT_DIR),
+        DWM_SRC_ROOT_DIR,
     ],
     sources=[
-        relative_path(DWM_SRC_ROOT_DIR, 'drw.c'),
-        relative_path(DWM_SRC_ROOT_DIR, 'dwm.c'),
-        relative_path(DWM_SRC_ROOT_DIR, 'util.c'),
+        os.path.join(DWM_SRC_ROOT_DIR, 'drw.c'),
+        os.path.join(DWM_SRC_ROOT_DIR, 'dwm.c'),
+        os.path.join(DWM_SRC_ROOT_DIR, 'util.c'),
     ],
 )
 
@@ -150,10 +143,6 @@ class BuildDwm(build_ext, object):
 
     def get_ext_filename(self, ext_name):
         return ext_name + '.so'
-
-    @property
-    def dwm_version(self):
-        return 'custom' if self.dwm_source else VERSION
 
 setup(
     name='pydwm',
