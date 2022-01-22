@@ -1,7 +1,5 @@
 # Created by https://www.gitignore.io/api/emacs,python
 
-dwm_src/dwm*
-
 ### Emacs ###
 # -*- mode: gitignore; -*-
 *~
@@ -61,5 +59,3 @@ ENV/
 env.bak/
 venv.bak/
 dist/
-
-dwm_src

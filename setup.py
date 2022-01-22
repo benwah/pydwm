@@ -1,19 +1,8 @@
 import os
 import distutils.ccompiler as cc
-import logging
-import tempfile
-import hashlib
-import tarfile
-import shutil
 
 from setuptools.command.build_ext import build_ext
-from setuptools.command.install import install
 from setuptools import (Extension, setup)
-
-try:
-    from urllib.request import urlopen
-except ImportError:
-    from urllib2 import urlopen
 
 
 def relative_path(*parts):
@@ -21,14 +10,7 @@ def relative_path(*parts):
 
 
 DWM_VERSION = '6.3'
-DWM_SRC_ROOT_DIR= relative_path('dwm_src')
-DWM_REMOTE_SOURCE = (
-    'https://dl.suckless.org/dwm/dwm-{version}.tar.gz'.format(
-        version=DWM_VERSION
-    )
-)
-DWM_MD5 = '9929845ccdec4d2cc191f16210dd7f3d'
-
+DWM_SRC_ROOT_DIR = relative_path('dwm_src')
 
 dwm = Extension(
     'dwm',
@@ -71,49 +53,13 @@ class BuildDwm(build_ext, object):
     ]
 
     def initialize_options(self):
-        self.dwm_source = None
         super(BuildDwm, self).initialize_options()
-
-    def download_dwm(self):
-        if not os.path.exists(relative_path(DWM_SRC_ROOT_DIR)):
-            logger = logging.getLogger()
-            logger.warn('Downloading {file}...'.format(file=DWM_SRC_ROOT_DIR))
-            response = urlopen(DWM_REMOTE_SOURCE)
-            data = response.read()
-
-            os.mkdir(relative_path(DWM_SRC_ROOT_DIR))
-
-            logger.warn('Validating MD5...')
-            assert(hashlib.md5(data).hexdigest() == DWM_MD5)
-
-            logger.warn('Extracting...')
-            with tempfile.TemporaryFile() as destination_file:
-                destination_file.write(data)
-                destination_file.seek(0)
-                with tarfile.open(
-                    fileobj=destination_file,
-                    mode='r:gz'
-                ) as archive:
-                    archive.extractall(DWM_SRC_ROOT_DIR)
-                    destination_file.close()
-                    unpacked_dest = 'dwm-{version}'.format(version=DWM_VERSION)
-                    unpacked_dest = relative_path(
-                        DWM_SRC_ROOT_DIR,
-                        unpacked_dest
-                    )
-                    for file in os.listdir(unpacked_dest):
-                        shutil.move(
-                            relative_path(unpacked_dest, file),
-                            relative_path(DWM_SRC_ROOT_DIR),
-                        )
 
     def copy_default_config(self):
         dest_file_path = relative_path(DWM_SRC_ROOT_DIR, 'config.h')
         if not os.path.exists(dest_file_path):
             source_file = open(
-                relative_path(
-                    DWM_SRC_ROOT_DIR, 'config.def.h'
-                ),
+                relative_path('config.h'),
                 'r'
             )
             dest_file = open(dest_file_path, 'w')
@@ -121,21 +67,11 @@ class BuildDwm(build_ext, object):
             source_file.close()
             dest_file.close()
 
-    def copy_dwm_source(self):
-        if not os.path.exists(relative_path(DWM_SRC_ROOT_DIR)):
-            shutil.copytree(self.dwm_source, DWM_SRC_ROOT_DIR)
-
     def build_extension(self, ext):
         if ext.name == 'dwm':
             self.compiler = cc.new_compiler()
+            self.copy_default_config()
 
-            if self.dwm_source is None:
-                self.download_dwm()
-                self.copy_default_config()
-            else:
-                self.copy_dwm_source()
-
-        del(self.dwm_source)
         return super(BuildDwm, self).build_extension(ext)
 
     def get_export_symbols(self, ext):
@@ -143,6 +79,7 @@ class BuildDwm(build_ext, object):
 
     def get_ext_filename(self, ext_name):
         return ext_name + '.so'
+
 
 setup(
     name='pydwm',

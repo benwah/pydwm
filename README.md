@@ -14,8 +14,14 @@ With this, you can start `dwm` from a python script, and spawn sub-processes / t
 
 To build this, you'll need the source code for some libraries DWM requires. On Ubuntu:
 
-```bash
+```
 sudo apt-get install build-essential libx11-dev libxft-dev libxinerama-dev
+```
+
+## Run tests
+
+```
+python -m pytest
 ```
 
 ## Install
